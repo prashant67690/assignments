@@ -16,6 +16,53 @@
   Once you've implemented the logic, test your code by running
 */
 
-class Calculator {}
+class Calculator {
+  constructor() {
+    this.res = 0;
+  }
+
+  add(num) {
+    this.res = this.res + num;
+  }
+  subtract(num) {
+    this.res = this.res - num;
+  }
+  multiply(num) {
+    this.res = this.res * num;
+  }
+  divide(num) {
+    this.res = this.res / num;
+  }
+  clear() {
+    this.res = 0;
+  }
+  getResult() {
+    return this.res;
+  }
+  calculate(str) {
+    let ans = 0;
+    let cleaned = "";
+    for (let i = 0; i < str.length; i++) {
+      if (str[i] == " ") {
+        continue;
+      } else if (str[i] >= 48 && str[i] <= 57) {
+        cleaned += str[i];
+      } else {
+        throw new Error("non-numerical characters");
+      }
+    }
+    cleaned = "(" + cleaned + ")";
+    let st = [];
+
+    for (let i = 0; i < cleaned.length; i++) {
+      if (cleaned[i] == ")") {
+      } else {
+        st.push(cleaned[i]);
+      }
+    }
+
+    return ans;
+  }
+}
 
 module.exports = Calculator;
