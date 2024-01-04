@@ -39,11 +39,98 @@
 
   Testing the server - run `npm run test-todoServer` command in terminal
  */
-  const express = require('express');
-  const bodyParser = require('body-parser');
-  
-  const app = express();
-  
-  app.use(bodyParser.json());
-  
-  module.exports = app;
+const express = require("express");
+const bodyParser = require("body-parser");
+// const uuid = require("uuid");
+const app = express();
+
+let arr = [
+  {
+    id: 1,
+    title: "gym at 7",
+    description: "i have to go to gym for the push day and chest exercises",
+  },
+  {
+    id: 2,
+    title: "College at 11",
+    description: "i have to go to college for the orientation",
+  },
+];
+
+app.use(bodyParser.json());
+
+app.get("/todos", (req, res) => {
+  if (arr.length == 0) return res.status(404).send();
+  return res.status(200).json(arr);
+});
+
+app.get("/todos/:id", (req, res) => {
+  let id = req.params.id;
+
+  if (id === null || id > arr.length) {
+    return res.status(404).send();
+  }
+  return res.status(200).json(arr[id - 1]);
+});
+
+app.post("/todos", (req, res) => {
+  const title = req.body.title;
+  const description = req.body.description;
+  const id = arr.length + 1;
+
+  if (!todo) {
+    res.status(404).send();
+  }
+
+  arr.push({ id, title, description });
+
+  res.status(201).json(arr[arr.length - 1]);
+});
+
+app.put("todos/:id", (req, res) => {
+  if (id === null || id > arr.length) {
+    res.status(404).send();
+  }
+
+  if (!todo) {
+    res.status(404).send();
+  }
+
+  const title = req.body.title;
+  const description = req.body.description;
+
+  arr[id - 1].title = title;
+  arr[id - 1].description = description;
+
+  res.status(200).send();
+});
+
+app.delete("/todos/:id", (req, res) => {
+  const id = req.params.id;
+
+  if (!todo) {
+    res.status(404).send();
+  }
+
+  if (id === null || id > arr.length) {
+    res.status(404).send();
+  }
+  const result = [];
+
+  for (let i = 0; i < arr.length; i++) {
+    if (arr[i].id != id) {
+      result.push(arr[i]);
+    }
+  }
+
+  arr = result;
+  res.status(200).send();
+});
+
+app.all("*", (req, res) => {
+  res.status(404).send();
+});
+
+app.listen(3000);
+
+module.exports = app;
