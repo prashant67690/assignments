@@ -6,17 +6,46 @@
     let globalId = 1;
     let todoState = [];
     let oldTodoState = [];
-
-    function addTodoToDom() {
-      
+    
+    function addTodoToDom(add) {
+        const todoList = document.getElementById('todos');
+        var todoItem = document.createElement('li');
+        var todoText = document.createElement('span');  
+        todoText.innerHTML = '<b>'+add.title+'</b>';
+        var todoDescription = document.createElement('span');  
+        todoDescription.innerHTML = '<b>'+add.description+'</b>';
+        todoItem.appendChild(todoText);
+        todoItem.appendChild(todoDescription);
+        todoItem.setAttribute('id',add.id); 
+        todoList.appendChild(todoItem);
+        todoState.push(add);
     }
 
     function removeTodoFromDom(todo) {
-      
+         var todoItem = document.getElementById(todo.id);
+         if(todoState && todoItem!=null){
+            todoItem.parentNode.removeChild(todoItem);
+           
+            this.todoState = this.todoState.filter((e)=>{
+             return e.id!==id;
+            })
+          }
     }
 
-    function updateTodoInDom(oldTodo, newTodo) {
-        
+
+    function updateTodo(update){
+      const element = document.getElementById(update.id);
+
+      element.children[0].innerHTML = '<b>' + newTodo.title + '</b>';
+      element.children[1].innerHTML = ': ' + newTodo.desc + ' ';
+
+
+      this.todoState = this.todoState.map((e)=>{
+        if(update.id === e.id){
+          return update;
+        }
+        return e;
+      })
     }
 
     function updateState(newTodos) {
@@ -25,18 +54,81 @@
       // 1. added
       // 2. deleted
       // 3. updated
-      const added = [];
-      const deleted = [];
-      const updated = [];
+      let added = [];
+    
+  
       // calculate these 3 arrays
       // call addTodo, removeTodo, updateTodo functions on each of the
       // elements
-      oldTodoState = newTodos;
+      this.oldTodoState = newTodos;
+      
+      console.log(todoState);
+      console.log(this.oldTodoState);
+  
+      if(this.oldTodoState.length !== 0){
+        let res = [];
+
+        newTodos.map((newTodo)=>{   
+          this.oldTodoState.map((oldTodo)=>{
+          if(oldTodo.id !== newTodo.id) added.push(newTodo);
+          });
+        });
+        
+        if(added == []) {
+          added.concat(newTodos);
+        }
+      }
+
+
+      let deleted = [];
+      if(this.oldTodoState.length !== 0){
+        deleted = this.oldTodoState.map((oldTodo)=>{
+          return newTodos.map((newTodo)=>{
+              if(oldTodo.id !== newTodo.id) return oldTodo;
+          })
+        })
+      }
+
+      let updated = [];
+      if (this.oldTodoState.length !== 0) {
+          updated = newTodos.map((newTodo) => {
+            return this.oldTodoState.map((oldTodo) => {
+              if (
+                oldTodo.id === newTodo.id &&
+                (oldTodo.title !== newTodo.title ||
+                  oldTodo.desc !== newTodo.desc)
+              ) {
+                return newTodo;
+              }
+            });
+          });
+        }
+
+        console.log(added);
+        console.log(deleted);
+        console.log(updated);
+
+        for(let i=0;i<added.length;i++){
+          addTodoToDom(added[i]);
+        }
+
+        for(let i=0;i<deleted.length;i++){
+          removeTodoFromDom(deleted[i]);
+        }
+
+        // for(let i=0;i<updated.length;i++){
+        //   updateTodo(updated[i]);
+        // }
+         
     }
 
     function addTodo() {
       const title = document.getElementById("title").value;
       const description = document.getElementById("description").value;
+
+      if(title.trim()===''|| description.trim()===''){
+        return;
+      }
       todoState.push({
         title: title,
         description: description,
