@@ -1,0 +1,26 @@
+.container{
+    border: 1px #ddd solid;
+    padding: 1rem;
+    border-radius: 10px;
+    width: 500px;
+    padding-bottom: 4rem;
+}
+.rend{
+    margin-bottom:3rem ;
+    color:#777;
+}
+.rend span{
+    display: block;
+    margin: .5rem;
+}
+
+a{
+   text-decoration: none;
+   text-align: center;
+   color: white;
+   background-color: cornflowerblue;
+   margin: 1rem;
+   width:100px;
+   padding: .9rem;
+   border-radius: 10px;
+}
